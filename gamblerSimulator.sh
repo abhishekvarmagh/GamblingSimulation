@@ -23,18 +23,21 @@ function bet()
 	fi
 }
 
-for (( i=1; i<=$DAY_IN_MONTH; i++ ))
-do
-	cash=$STAKE
-	while [[ $cash -ne $LOOSE && $cash -ne $WON ]]
+function play()
+{
+	for (( i=1; i<=$DAY_IN_MONTH; i++ ))
 	do
-		bet
+		cash=$STAKE
+		while [[ $cash -ne $LOOSE && $cash -ne $WON ]]
+		do
+			bet
+		done
+		perDay[Day"$i"]=$(( cash-STAKE ))
+		totalAmount=$(( totalAmount+perDay[Day"$i"] ))
+		echo Day"$i" : ${perDay[Day"$i"]} : $totalAmount
+		perDay[Day"$i"]=$totalAmount
 	done
-	perDay[Day"$i"]=$(( cash-STAKE ))
-	totalAmount=$(( totalAmount+perDay[Day"$i"] ))
-	echo Day"$i" : ${perDay[Day"$i"]} : $totalAmount
-	perDay[Day"$i"]=$totalAmount
-done
+}
 
 function luck()
 {
@@ -44,8 +47,22 @@ function luck()
 	done | sort -k2 -$1 | head -1
 }
 
-echo "Luckiest Day : "
-luck rn
-echo "UnLuckiest Day : " 
-luck n
-echo "Total Amount Won And Loose : "$totalAmount
+while [ $totalAmount -ge 0 ]
+do
+	play
+	echo "Luckiest Day : "
+	luck rn
+	echo "UnLuckiest Day : " 
+	luck n
+	echo "Total Amount Won And Loose : "$totalAmount
+	if [ $totalAmount -ge 0 ]
+	then
+		read -p "Do you want continue [y/n] " input
+		if [[ $input == "y" ]]
+		then
+			echo "Next Month"
+		else
+			break
+		fi
+	fi
+done
