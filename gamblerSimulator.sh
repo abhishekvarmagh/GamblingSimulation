@@ -7,6 +7,11 @@ BET=1
 PERCENT=50
 WON=$(( STAKE+(PERCENT*100/STAKE) ))
 LOOSE=$((STAKE-(PERCENT*100/STAKE)))
+DAY_IN_MONTH=20
+
+declare -A perDay
+
+totalAmount=0
 
 function bet()
 {
@@ -18,10 +23,15 @@ function bet()
 	fi
 }
 
-cash=$STAKE
-while [[ $cash -ne $LOOSE && $cash -ne $WON ]]
+for (( i=1; i<=$DAY_IN_MONTH; i++ ))
 do
-	bet
+	cash=$STAKE
+	while [[ $cash -ne $LOOSE && $cash -ne $WON ]]
+	do
+		bet
+	done
+	perDay[Day"$i"]=$(( cash-STAKE ))
+	totalAmount=$(( totalAmount+perDay[Day"$i"] ))
 done
 
-echo $cash
+echo "Total Amount Won And Loose : "$totalAmount
