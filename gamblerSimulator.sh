@@ -32,7 +32,20 @@ do
 	done
 	perDay[Day"$i"]=$(( cash-STAKE ))
 	totalAmount=$(( totalAmount+perDay[Day"$i"] ))
-	echo Day"$i" : ${perDay[Day"$i"]}
+	echo Day"$i" : ${perDay[Day"$i"]} : $totalAmount
+	perDay[Day"$i"]=$totalAmount
 done
 
+function luck()
+{
+	for i in ${!perDay[@]}
+	do
+		echo $i ${perDay[$i]}
+	done | sort -k2 -$1 | head -1
+}
+
+echo "Luckiest Day : "
+luck rn
+echo "UnLuckiest Day : " 
+luck n
 echo "Total Amount Won And Loose : "$totalAmount
