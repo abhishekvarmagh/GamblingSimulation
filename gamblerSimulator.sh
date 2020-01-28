@@ -32,6 +32,7 @@ do
 	done
 	perDay[Day"$i"]=$(( cash-STAKE ))
 	totalAmount=$(( totalAmount+perDay[Day"$i"] ))
+	echo Day"$i" : ${perDay[Day"$i"]}
 done
 
 echo "Total Amount Won And Loose : "$totalAmount
